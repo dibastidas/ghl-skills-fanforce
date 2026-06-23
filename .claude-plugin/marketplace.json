@@ -1,0 +1,20 @@
+{
+  "name": "ghl-skills-fanforce",
+  "displayName": "GHL Skills — Fanforce",
+  "description": "Skills para publicar videos en redes sociales y crear automatizaciones de respuesta a comentarios directamente desde GoHighLevel. Incluye verificación de canales conectados, programación de posts y creación de workflows de comentarios para Instagram y Facebook.",
+  "author": "Fanforce",
+  "version": "1.0.0",
+  "tags": ["ghl", "gohighlevel", "social media", "automatizacion", "instagram", "facebook"],
+  "skills": [
+    {
+      "name": "ghl-publicar",
+      "displayName": "Publicar Video en GHL",
+      "description": "Publica o programa un video en redes sociales desde GoHighLevel. Verifica canales conectados, acepta portada opcional y permite publicar ahora o programar con recomendaciones de horario."
+    },
+    {
+      "name": "ghl-automatizar-comentarios",
+      "displayName": "Automatizar Comentarios en GHL",
+      "description": "Crea una automatización en GHL para responder automáticamente cuando alguien comenta una palabra clave en un reel. Responde en el comentario, envía DM y etiqueta el contacto. Solo Instagram y Facebook."
+    }
+  ]
+}

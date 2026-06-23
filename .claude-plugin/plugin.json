@@ -1,0 +1,17 @@
+{
+  "name": "ghl-skills-fanforce",
+  "version": "1.0.0",
+  "displayName": "GHL Skills — Fanforce",
+  "description": "Skills para publicar videos y crear automatizaciones de comentarios en GoHighLevel.",
+  "author": "Fanforce",
+  "skills": [
+    {
+      "name": "ghl-publicar",
+      "path": "skills/ghl-publicar/SKILL.md"
+    },
+    {
+      "name": "ghl-automatizar-comentarios",
+      "path": "skills/ghl-automatizar-comentarios/SKILL.md"
+    }
+  ]
+}
