@@ -7,11 +7,11 @@
   "skills": [
     {
       "name": "ghl-publicar",
-      "path": "skills/ghl-publicar/SKILL.md"
+      "path": "skills/ghl-publicar/ghl-publicar.md"
     },
     {
       "name": "ghl-automatizar-comentarios",
-      "path": "skills/ghl-automatizar-comentarios/SKILL.md"
+      "path": "skills/ghl-automatizar-comentarios/ghl-automatizar-comentarios.md"
     }
   ]
 }
