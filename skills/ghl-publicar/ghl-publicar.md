@@ -252,14 +252,14 @@ Una vez publicado con éxito:
 
 > "**¿Quieres crear la automatización de respuesta a comentarios para este video?**
 >
-> Con `/lf:ghl-automatizar-comentarios` configuro que cuando alguien comente una palabra clave en el reel:
+> Con `/lf:ghl-automatizar-comentarios-chrome` configuro que cuando alguien comente una palabra clave en el reel:
 > - GHL responde automáticamente en el comentario
 > - Le envía un DM con tu mensaje
 > - Lo etiqueta en tu CRM
 >
 > (sí, arrancamos / no por ahora)"
 
-Si dice sí → lanzar el skill `ghl-automatizar-comentarios` pasando el Post ID guardado.
+Si dice sí → lanzar el skill `ghl-automatizar-comentarios-chrome` pasando el Post ID guardado.
 Si dice no → terminar aquí.
 
 ---
