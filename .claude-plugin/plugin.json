@@ -13,5 +13,10 @@
       "name": "ghl-automatizar-comentarios",
       "path": "skills/ghl-automatizar-comentarios/ghl-automatizar-comentarios.md"
     }
+    },
+    {
+      "name": "ghl-automatizar-comentarios-chrome",
+      "path": "skills/ghl-automatizar-comentarios-chrome/ghl-automatizar-comentarios-chrome.md"
+    }
   ]
 }
