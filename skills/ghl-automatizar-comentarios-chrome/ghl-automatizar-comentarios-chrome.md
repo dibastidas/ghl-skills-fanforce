@@ -21,7 +21,7 @@ Preguntar todo de una vez. No hacer preguntas en rondas separadas.
 >
 > **1. Canales** — ¿Instagram, Facebook o ambos?
 >
-> **2. El reel o post** — Nombre o fecha del post en GHL (ej: 'el reel del 20 de junio', 'video de precios').
+> **2. El reel o post** — Dime la fecha en que lo publicaste Y las primeras 3 palabras del caption/descripción del reel. Los necesito para que Claude lo encuentre sin problemas. (ej: 'publicado el 20 de junio, caption empieza con: Esto lo cambió')
 >
 > **3. Palabra clave del comentario** — ¿Qué debe escribir alguien para activar la respuesta? (ej: INFO, PRECIO, LINK)
 >
@@ -101,7 +101,7 @@ Toma un screenshot después de cada sección completada para verificar.
 ═══════════════════════════════
 DATOS
 ═══════════════════════════════
-Post: [NOMBRE DEL POST]
+Post: [FECHA DEL POST] — caption empieza con: "[PRIMERAS 3 PALABRAS DEL CAPTION]"
 Canales: [INSTAGRAM / FACEBOOK / AMBOS]
 Keyword: [PALABRA CLAVE]
 Variaciones: [VAR1, VAR2, VAR3, VAR4, VAR5, ...]
@@ -144,8 +144,8 @@ B3. En el campo de búsqueda escribe "Instagram" para filtrar. Selecciona "Insta
 B4. Aparecen los campos de configuración. Completa cada uno:
     - Campo "Connected Page" o "Página conectada": haz clic en el dropdown y selecciona la cuenta de Instagram conectada.
     - Campo "Post Type" o "Tipo de publicación": haz clic en el dropdown y selecciona "Published Post" o "Publicación publicada".
-    - Campo "Post" o "Publicación": haz clic en el dropdown o campo de búsqueda, escribe parte del nombre del post "[NOMBRE DEL POST]" y selecciónalo cuando aparezca.
-    - Campo "Keywords" o "Palabras clave": agrega cada variación. Escribe la primera y presiona Enter, luego la siguiente y Enter, así hasta agregar TODAS: [VAR1, VAR2, VAR3, ...] (agregar una por una).
+    - Campo "Post" o "Publicación": haz clic en el dropdown o campo de búsqueda. Busca primero por la fecha "[FECHA DEL POST]". Si no aparece el reel, borra y busca por las primeras palabras del caption "[PRIMERAS 3 PALABRAS DEL CAPTION]". Selecciónalo cuando aparezca.
+    - Campo "Keywords" o "Palabras clave" / "Filtro de frase": busca un botón "Add Filter" o "Agregar filtro". Haz clic en él. En el tipo de filtro selecciona "Contains phrase" o "Contiene frase". Luego agrega cada variación una por una: escribe la primera y presiona Enter, luego la siguiente y Enter, así hasta agregar TODAS: [VAR1, VAR2, VAR3, ...]. Si no aparece un botón de filtro y en cambio hay un campo de keywords directamente, agrégalas ahí una por una de la misma forma.
 B5. Haz clic en "Save" o "Guardar" para confirmar el trigger.
 B6. Toma screenshot para verificar que el trigger quedó configurado.
 
@@ -155,7 +155,8 @@ C1. Después de guardar el trigger, mira DEBAJO del bloque del trigger. Verás u
 C2. Se abre un panel con la lista de acciones disponibles.
 C3. Busca "Add Contact Tag" o "Agregar etiqueta al contacto". Haz clic en ella.
 C4. En el campo de etiqueta que aparece, escribe: instagram-comment
-C5. Haz clic en "Save" o "Guardar".
+C5. Si el sistema muestra que la etiqueta no existe, busca una opción "Add new tag", "Crear etiqueta" o "Añadir nueva etiqueta" y haz clic en ella para crearla. Luego selecciónala.
+C6. Haz clic en "Save" o "Guardar".
 C6. Toma screenshot para verificar que la etiqueta quedó agregada debajo del trigger.
 
 SECCIÓN D — RESPONDER EN EL COMENTARIO
@@ -166,8 +167,9 @@ D3. Aparece un editor de mensajes. Agrega la primera respuesta: "[respuesta 1]"
 D4. Busca un botón "Add Message", "+" o "Agregar mensaje" dentro de esta acción para agregar más respuestas. Haz clic en él.
 D5. Agrega la segunda respuesta: "[respuesta 2]". Repite este proceso hasta agregar las 10 respuestas.
 D6. Si hay una opción "Random", "Aleatorio" o "Rotate" (rotar), actívala para que las respuestas roten automáticamente.
-D7. Haz clic en "Save" o "Guardar".
-D8. Toma screenshot para verificar las 10 respuestas.
+D7. Busca un checkbox o casilla que diga "Mark comments as liked", "Marcar comentarios como me gusta" o similar. Actívalo (marcarlo con un check).
+D8. Haz clic en "Save" o "Guardar".
+D9. Toma screenshot para verificar las 10 respuestas y el checkbox activo.
 
 SECCIÓN E — INSTAGRAM INTERACTIVE MESSENGER
 
@@ -176,22 +178,24 @@ E2. En el panel de acciones, busca "Instagram Interactive Messenger" o "Messenge
 E3. Busca el campo "Response Type" o "Tipo de respuesta". Haz clic en su dropdown y selecciona "Reply to comment via DM" o "Responder al comentario por DM".
 E4. En el campo de mensaje escribe exactamente: [MENSAJE DM COMPLETO]
 
-[SI HAY BOTÓN — incluir E5 a E9, omitir si no hay enlace]
+[SI HAY BOTÓN — incluir E5 a E10, omitir si no hay enlace]
 E5. Busca la opción "Add Button" o "Agregar botón" dentro del messenger. Haz clic en ella.
 E6. En el campo de texto del botón escribe: [TEXTO DEL BOTÓN]
 E7. En el campo de URL del botón pega: [URL DEL ENLACE]
-E8. Haz clic en "Save" o "Guardar" para guardar el messenger completo.
-E9. Después de guardar, verás que DEBAJO del bloque del messenger aparecen DOS ramas:
+E8. Antes de guardar, busca el campo "Step wait", "Espera de paso" o "Wait" dentro del messenger. Haz clic en él, selecciona todo el texto con Ctrl+A / Cmd+A, bórralo y escribe: 75
+E9. Ahora sí haz clic en "Save" o "Guardar" para guardar el messenger completo.
+E10. Después de guardar, verás que DEBAJO del bloque del messenger aparecen DOS ramas:
     - Una rama que dice "Default timeout" o "Tiempo de espera por defecto" — IGNORAR esta.
     - Otra rama que muestra el texto del botón o "Button clicked" — ESTA es la correcta.
     Haz clic en el botón "+" que está dentro de la RAMA DEL BOTÓN (la segunda).
-E10. En el panel de acciones selecciona "Add Contact Tag" o "Agregar etiqueta".
-E11. Escribe la etiqueta: ig-click-boton
-E12. Haz clic en "Save".
+E11. En el panel de acciones selecciona "Add Contact Tag" o "Agregar etiqueta".
+E12. Escribe la etiqueta: ig-click-boton. Si no existe, haz clic en "Add new tag" o "Añadir nueva etiqueta" para crearla.
+E13. Haz clic en "Save".
 [FIN BLOQUE BOTÓN]
 
 [SI NO HAY BOTÓN]
-E5. Haz clic en "Save" o "Guardar" para guardar el messenger.
+E5. Antes de guardar, busca el campo "Step wait", "Espera de paso" o "Wait" dentro del messenger. Haz clic en él, selecciona todo con Ctrl+A / Cmd+A, bórralo y escribe: 75
+E6. Ahora sí haz clic en "Save" o "Guardar" para guardar el messenger.
 [FIN BLOQUE SIN BOTÓN]
 
 SECCIÓN F — GUARDAR Y PUBLICAR
