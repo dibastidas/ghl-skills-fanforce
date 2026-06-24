@@ -27,6 +27,31 @@ Verifica prerrequisitos, recopila la configuración y crea el workflow en GHL pa
 
 ---
 
+## ⚠️ IMPORTANTE — Este skill requiere Claude de escritorio con Playwright MCP
+
+Este skill navega GoHighLevel automáticamente usando tu navegador. Para que funcione necesitas:
+
+1. **Usar Claude Code de escritorio** (la app de escritorio, no claude.ai en el browser)
+2. **Tener el MCP de Playwright conectado**
+
+### ¿Cómo conectar Playwright en Claude de escritorio?
+
+Si no tienes Playwright conectado, sigue estos pasos — son más fáciles de lo que parecen:
+
+1. Abre Claude de escritorio
+2. Haz clic en el ícono de **engranaje ⚙️** (esquina inferior izquierda)
+3. Busca la sección **"MCP Servers"** o **"Integraciones"**
+4. Haz clic en **"Add MCP Server"** o **"Agregar servidor"**
+5. Selecciona la opción **"From marketplace"** o busca **"Playwright"**
+6. Instálalo y reinicia Claude
+7. Cuando vuelvas a abrir Claude, el MCP de Playwright ya estará disponible
+
+> Si tienes dudas en algún paso, dime exactamente en qué pantalla estás y te guío desde ahí.
+
+Una vez que tengas Playwright conectado, podemos continuar.
+
+---
+
 ## PASO 1 — Verificar prerrequisitos
 
 Mostrar al usuario lo que necesita antes de continuar:
@@ -195,6 +220,8 @@ Si no se conoce el LOCATION_ID pedirlo al usuario — aparece en la URL de GHL c
 
 Verificar con screenshot que la pantalla de Automatizaciones cargó correctamente.
 
+> **Nota sobre idioma:** GHL puede estar en inglés o en español según la cuenta. En cada paso se indica el nombre en ambos idiomas. Si no encuentras una opción en inglés, búscala en español y viceversa.
+
 ---
 
 ### WORKFLOW DE INSTAGRAM (si aplica)
@@ -205,38 +232,44 @@ Verificar con screenshot que la pantalla de Automatizaciones cargó correctament
 - Nombre: `Auto-Comentario [PALABRA_CLAVE] - IG - [fecha de hoy]`
 
 **2. Agregar Trigger: Instagram Comment**
-- Clic en "Add Trigger"
-- Buscar y seleccionar **"Instagram Comment"**
-- Connected Page: seleccionar la cuenta de Instagram conectada
-- Post Type: **"Published Post"**
-- Post: buscar y seleccionar el reel (por nombre o fecha)
-- Keywords: agregar todas las variaciones generadas en PASO 4
+- Clic en "Add Trigger" (o **"Agregar disparador"**)
+- Buscar y seleccionar **"Instagram Comment"** (o **"Comentario de Instagram"**)
+- Connected Page (o **"Página conectada"**): seleccionar la cuenta de Instagram conectada
+- Post Type (o **"Tipo de publicación"**): **"Published Post"** (o **"Publicación publicada"**)
+- Post (o **"Publicación"**): buscar y seleccionar el reel por nombre o fecha
+- Keywords (o **"Palabras clave"**): agregar todas las variaciones generadas en PASO 4
 - Guardar trigger
 
 **3. Acción 1 — Agregar etiqueta**
 - Clic en "+" para agregar acción
-- Seleccionar **"Add Contact Tag"**
+- Seleccionar **"Add Contact Tag"** (o **"Agregar etiqueta al contacto"**)
 - Tag: `instagram-comment`
 - Guardar
 
 **4. Acción 2 — Responder en el comentario**
 - Clic en "+" para agregar acción
-- Seleccionar **"Respond on Comment"** o **"Reply to Comment"**
+- Seleccionar **"Respond on Comment"** (o **"Responder al comentario"**)
 - Agregar las 10 variaciones de respuesta del PASO 5
 - Activar rotación aleatoria si está disponible
 - Guardar
 
-**5. Acción 3 — Enviar DM por Instagram**
+**5. Acción 3 — Instagram Interactive Messenger**
 - Clic en "+" para agregar acción
-- Seleccionar **"Instagram Interactive Messenger"** o **"Send Instagram DM"**
+- Seleccionar **"Instagram Interactive Messenger"** (en español: **"Messenger Interactivo de Instagram"**)
+- En el campo **"Response Type"** (o **"Tipo de respuesta"**) seleccionar **"Reply to comment via DM"** (o **"Responder al comentario por DM"**)
 - Escribir el mensaje configurado en PASO 3
 
 - **Si el usuario proporcionó un enlace:**
-  - Agregar botón con texto descriptivo (ej: "Ver aquí", "Acceder ahora", "Ir al link")
+  - Agregar un botón con texto descriptivo (ej: "Ver aquí", "Acceder ahora", "Ir al link")
   - URL del botón: el enlace proporcionado
-  - En la rama "Botón clickeado" agregar:
-    - **"Add Contact Tag"** → tag: `ig-click-boton`
-- **Si no hay enlace:** guardar sin botón
+  - Guardar — al guardar aparecen automáticamente **dos ramas debajo**:
+    - Rama 1: **"Default timeout"** — ignorar esta
+    - Rama 2: **la rama con el texto del botón** — esta es la correcta
+  - Hacer clic en la **rama del botón** para expandirla
+  - Agregar acción: **"Add Contact Tag"** (o **"Agregar etiqueta al contacto"**)
+  - Tag: `ig-click-boton`
+  - Guardar
+- **Si no hay enlace:** guardar el mensaje sin botón
 
 **6. Activar el workflow**
 - Clic en "Save"
@@ -249,11 +282,12 @@ Verificar con screenshot que la pantalla de Automatizaciones cargó correctament
 
 Repetir el mismo proceso con estas diferencias:
 - Nombre: `Auto-Comentario [PALABRA_CLAVE] - FB - [fecha de hoy]`
-- Trigger: **"Facebook Comment"** en lugar de Instagram Comment
+- Trigger: **"Facebook Comment"** (o **"Comentario de Facebook"**) en lugar de Instagram Comment
 - Connected Page: seleccionar la Facebook Page conectada
-- Acción 3: **"Facebook Interactive Messenger"** en lugar de Instagram DM
+- Acción 3: **"Facebook Interactive Messenger"** (o **"Messenger Interactivo de Facebook"**), mismo tipo de respuesta **"Reply to comment via DM"** (o **"Responder al comentario por DM"**)
+- Las dos ramas que aparecen son iguales: ignorar "Default timeout", agregar la etiqueta en la **rama del botón**
 - Tag de etiqueta inicial: `fb-comment`
-- Tag en clic de botón: `fb-click-boton`
+- Tag en rama del botón: `fb-click-boton`
 
 ---
 
