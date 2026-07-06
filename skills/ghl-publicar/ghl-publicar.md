@@ -8,12 +8,11 @@ description: >
   que combine publicar/programar contenido en canales sociales usando GHL.
 argument-hint: "[URL del video — opcional, se pide en el flujo]"
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   depends-on: []
   mcp-required: ["HighLevel"]
   external-deps:
-    - "GHL Private Integration Token (Settings > Private Integrations)"
-    - "MCP de HighLevel conectado como 'HighLevel' con el token de la sub-cuenta"
+    - "MCP de HighLevel/LeadConnector conectado al endpoint v2: https://services.leadconnectorhq.com/mcp/anthropic/v2 (en Claude.ai vía Settings > Connectors > Add custom connector con OAuth; en Claude Code CLI vía mcp-remote con Private Integration Token + locationId)"
 ---
 
 # ghl-publicar — Publicar o Programar Video en Redes desde GHL
@@ -22,27 +21,48 @@ Recopila los datos del video, verifica que los canales estén conectados en GHL 
 
 ---
 
+## CÓMO FUNCIONA EL MCP v2 DE GHL (leer antes de cualquier llamada)
+
+El MCP de HighLevel (endpoint `https://services.leadconnectorhq.com/mcp/anthropic/v2`) NO expone tools fijos por función. Expone 5 meta-tools que dan acceso a toda la API pública de GHL:
+
+- `search_operations` — buscar una operación por descripción (ej: "create social media post")
+- `describe_operation` — ver parámetros y campos del body de una operación
+- `execute_operation` — ejecutar la operación
+- `search` / `fetch` — buscar registros del CRM (no se usan en este skill)
+
+Reglas de `execute_operation`:
+1. Las operaciones de **escritura** (create-post, bulk-delete) exigen `idempotencyKey` (cualquier UUID nuevo por llamada). Sin él → error 400.
+2. Las de **lectura** (get-account) no lo necesitan.
+3. Soporta `dryRun: true` para previsualizar la request sin ejecutarla.
+4. El body va en `params.body`, los path params en `params.path`, query en `params.query`. El `locationId` lo inyecta el MCP desde el header — no hace falta pasarlo.
+
+**Fallback sin MCP:** si el MCP no está cargado en la sesión, el mismo endpoint acepta curl directo (JSON-RPC + SSE) con headers `Authorization: Bearer {token}`, `locationId: {id}`, `Accept: application/json, text/event-stream`. También sigue funcionando el REST clásico (`POST /social-media-posting/{locationId}/posts` con header `Version: 2021-07-28`).
+
+---
+
 ## PRE-VUELO — Verificar conexión con GHL
 
 ```
-mcp__HighLevel__social-media-posting_get-account()
+mcp__HighLevel__execute_operation({
+  "operationId": "get-account",
+  "params": {"path": {}, "query": {}}
+})
 ```
+
+Devuelve la lista de cuentas sociales conectadas en `data.results.accounts` (cada una con `platform`, `name` e `id` — **guardar los `id`, son los `accountIds` para publicar**).
 
 Si la herramienta no responde o devuelve error de autenticación, mostrar:
 
 > "Para usar este skill necesitas conectar el MCP de GoHighLevel.
 >
 > **Pasos:**
-> 1. Entra a tu sub-cuenta GHL → Settings → Private Integrations
-> 2. Crea una nueva integración con el scope: **Social Media Posting**
-> 3. Copia el Private Integration Token generado
-> 4. En Claude, agrega el MCP con estos datos:
->    - **Nombre:** HighLevel
->    - **URL:** `https://services.leadconnectorhq.com/mcp/`
->    - **Header:** `Authorization: Bearer TU_TOKEN`
->    - **Header:** `locationId: TU_LOCATION_ID`
->       *(el Location ID aparece en la URL de GHL cuando estás en tu sub-cuenta)*
-> 5. Una vez conectado, ejecuta este skill de nuevo"
+> 1. Abre Claude.ai → **Settings** → **Connectors** → **Add custom connector**
+> 2. Pon como server URL: `https://services.leadconnectorhq.com/mcp/anthropic/v2`
+> 3. Haz clic en **Connect** y completa el sign-in de LeadConnector (iniciar sesión → elegir tu location/sub-cuenta → aprobar)
+> 4. Abre un chat nuevo — las herramientas de LeadConnector ya estarán disponibles
+> 5. Ejecuta este skill de nuevo"
+
+*(Alternativa para Claude Code CLI: agregar el MCP en `mcp.json` vía `mcp-remote` con la misma URL y headers `Authorization: Bearer {Private Integration Token}` + `locationId: {LOCATION_ID}`.)*
 
 Detener aquí hasta que el usuario confirme que el MCP está conectado.
 
@@ -97,10 +117,7 @@ Proponer 2 opciones concretas de fecha/hora y preguntar cuál prefieren antes de
 
 ## PASO 2 — Verificar canales conectados en GHL
 
-Ejecutar:
-```
-mcp__HighLevel__social-media-posting_get-account()
-```
+Usar la respuesta del `get-account` del pre-vuelo (o volver a ejecutarlo si pasó tiempo).
 
 Comparar la respuesta con los canales que el usuario seleccionó.
 
@@ -163,7 +180,7 @@ Personalizar el mensaje según el canal que falta:
 >
 > Avísame cuando quede conectada y verifico."
 
-Después de que el usuario confirme, volver a ejecutar `social-media-posting_get-account()` para verificar. Repetir el ciclo hasta que todos los canales seleccionados estén conectados. No avanzar si alguno sigue pendiente.
+Después de que el usuario confirme, volver a ejecutar `execute_operation` con `get-account` para verificar. Repetir el ciclo hasta que todos los canales seleccionados estén conectados. No avanzar si alguno sigue pendiente.
 
 ---
 
@@ -189,32 +206,57 @@ NUNCA ejecutar la publicación sin un "sí", "dale", "publica" o confirmación e
 
 ## PASO 4 — Publicar
 
-### Si es "ahora mismo":
+Se publica con `execute_operation` → operationId `create-post`. Un post por llamada (si son varios canales, GHL acepta varios `accountIds` en el mismo post; si son varios videos, una llamada por video).
+
+El payload base de abajo funciona **para todas las redes** (Instagram, Facebook, LinkedIn, Twitter/X, YouTube, Google Business, TikTok) — la única diferencia por red es el bloque extra de TikTok indicado más abajo. No agregar bloques extra para las demás redes.
+
 ```
-mcp__HighLevel__social-media-posting_create-post({
-  "platforms": ["instagram", "facebook", ...],
-  "content": "CAPTION",
-  "mediaUrls": ["URL_VIDEO"],
-  "thumbnailUrl": "URL_PORTADA",
-  "publishNow": true
+mcp__HighLevel__execute_operation({
+  "operationId": "create-post",
+  "idempotencyKey": "{UUID nuevo por cada llamada}",
+  "params": {
+    "path": {},
+    "query": {},
+    "body": {
+      "accountIds": ["{id de cuenta del get-account}", ...],
+      "type": "post",
+      "userId": "{userId de GHL}",
+      "status": "published",              // "published" = ahora mismo | "scheduled" = programado
+      "scheduleDate": "2026-07-25T19:00:00.000Z",  // solo si status=scheduled (SIEMPRE en UTC)
+      "scheduleTimeUpdated": true,        // solo si status=scheduled
+      "summary": "CAPTION completo con hashtags",
+      "media": [{
+        "url": "URL_VIDEO",
+        "type": "video/mp4",              // usar "type", NO "mimeType"
+        "thumbnail": "URL_PORTADA o \"\"",
+        "defaultThumb": "URL_PORTADA o \"\""
+      }]
+    }
+  }
 })
 ```
 
-### Si es programado:
+### Si algún canal es TikTok — OBLIGATORIO agregar al body:
 ```
-mcp__HighLevel__social-media-posting_create-post({
-  "platforms": ["instagram", "facebook", ...],
-  "content": "CAPTION",
-  "mediaUrls": ["URL_VIDEO"],
-  "thumbnailUrl": "URL_PORTADA",
-  "scheduledAt": "2024-06-25T19:00:00Z"
-})
+"tiktokPostDetails": {
+  "privacyLevel": "PUBLIC_TO_EVERYONE",
+  "promoteOtherBrand": false,
+  "enableComment": true,
+  "enableDuet": false,
+  "enableStitch": false,
+  "videoDisclosure": false,
+  "promoteYourBrand": false
+}
 ```
+Sin este bloque, GHL devuelve 400 (`toLowerCase on undefined`) para cualquier status distinto de draft. Usar los campos `enable*` (no `disable*`).
 
 **Notas:**
-- Omitir `thumbnailUrl` si el usuario no proporcionó portada
-- Convertir siempre la hora del usuario a UTC antes de enviar (preguntar zona horaria si no está clara)
-- Nombres de plataforma en minúsculas: `instagram`, `facebook`, `tiktok`, `linkedin`, `twitter`, `youtube`
+- `userId` es **obligatorio** para posts no-draft en canales OAuth. Es el ID del usuario de GHL que "crea" el post — se obtiene una vez (aparece en `createdBy` de cualquier post existente, o vía la operación de users) y se reutiliza.
+- `idempotencyKey`: generar un UUID distinto por cada post. Sin él la operación falla con 400.
+- Dejar `thumbnail` y `defaultThumb` como `""` si el usuario no dio portada.
+- Convertir siempre la hora del usuario a UTC antes de enviar (preguntar zona horaria si no está clara). CDMX = UTC-6 fijo (México eliminó el DST en 2023).
+- Ante duda con el payload, ejecutar primero con `dryRun: true` y revisar el `resolvedRequest`.
+- El Post ID viene en `data.results.post._id`.
 
 ---
 
@@ -237,10 +279,14 @@ Mostrar el error exacto sin modificarlo. Errores comunes:
 
 | Error | Causa y solución |
 |-------|-----------------|
+| `requires idempotencyKey` | Falta el `idempotencyKey` en los arguments. Generar un UUID y reintentar. |
+| `toLowerCase on undefined` (400) | Post de TikTok sin `tiktokPostDetails`. Agregar el bloque completo. |
 | `Media URL not accessible` | La URL del video no es pública. Pedir otra URL. |
-| `Account not authorized` | El token no tiene scope de Social Media Posting. Regenerar con ese scope. |
+| `Account not authorized` | La conexión no tiene scope de Social Media Posting. Reconectar/regenerar con ese scope. |
 | `Platform not connected` | Volver al PASO 2 con el canal afectado. |
 | `Scheduled time in the past` | La hora programada ya pasó. Pedir nueva fecha/hora. |
+
+Para borrar un post creado por error: `execute_operation` con operationId `bulk-delete-social-planner-posts`, `idempotencyKey` nuevo, y `body: {"postIds": ["{postId}"]}`.
 
 No reintentar automáticamente. Reportar y esperar instrucciones.
 
