@@ -2,12 +2,15 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ghl-skills-fanforce",
   "owner": {
-    "name": "Lanza Facil"
+    "name": "Lanza Facil SAS"
   },
   "plugins": [
     {
       "name": "ghl-skills-fanforce",
       "source": "./",
+      "author": {
+        "name": "Lanza Facil SAS"
+      },
       "displayName": "GHL Skills — Fanforce",
       "description": "Skills para publicar videos en redes sociales y crear automatizaciones de respuesta a comentarios directamente desde GoHighLevel, más diseño y copy de carruseles con Nanobanana y Playwright. Incluye verificación de canales conectados, programación de posts, workflows de comentarios para Instagram y Facebook, y generación de carruseles listos para publicar.",
       "version": "1.1.0",

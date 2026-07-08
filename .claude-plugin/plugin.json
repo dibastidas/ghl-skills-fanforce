@@ -3,5 +3,7 @@
   "version": "1.1.0",
   "displayName": "GHL Skills — Fanforce",
   "description": "Skills para publicar videos y crear automatizaciones de comentarios en GoHighLevel, más diseño y copy de carruseles con Nanobanana y Playwright.",
-  "author": "Lanza Facil"
+  "author": {
+    "name": "Lanza Facil SAS"
+  }
 }
