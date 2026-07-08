@@ -196,7 +196,7 @@ NUNCA crear el workflow sin confirmación explícita.
 ### Inicializar
 
 ```
-mcp__plugin_formula100k_playwright__browser_take_screenshot()
+mcp__plugin_ghl-skills-fanforce_playwright__browser_take_screenshot()
 ```
 
 Verificar si GHL ya está abierto y el usuario está logueado. Si no:
@@ -211,7 +211,7 @@ Esperar confirmación y volver a tomar screenshot.
 ### Navegar a Automations
 
 ```
-mcp__plugin_formula100k_playwright__browser_navigate({
+mcp__plugin_ghl-skills-fanforce_playwright__browser_navigate({
   "url": "https://app.gohighlevel.com/v2/location/LOCATION_ID/automation/list"
 })
 ```
