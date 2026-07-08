@@ -113,18 +113,41 @@ Esperar. Si pega el prompt, usarlo como guía de diseño.
 
 ## PASO 3 — Fotos (opcional)
 
-> "¿Quieres incluir fotos reales en algún carrusel?
+> "¿Quieres incluir fotos en algún carrusel?
 >
-> **A) Sí** — dame la ruta de la carpeta local con las fotos
-> **B) No** — diseño 100% tipográfico"
+> **A) Sí, fotos reales** — dame la ruta de la carpeta local con las fotos
+> **B) Sí, generadas con IA** — Nanobanana crea las imágenes por ti (útil si
+>    no tienes fotos propias pero quieres el estilo con foto)
+> **C) No** — diseño 100% tipográfico"
 
-Si dice sí:
+Si el estilo elegido ya es muy visual por sí mismo (mucha decoración, texturas,
+subrayados, elementos gráficos — ej. Scrapbook/Collage, Highlighter/Notas
+Estéticas), se puede sugerir la opción C como recomendada antes de preguntar,
+pero sin decidir por el usuario.
+
+### Si dice A — fotos reales:
 - `ls "[ruta_carpeta_fotos]"` → listar los archivos disponibles
 
 **No leer todas las fotos de golpe.** Estrategia de selección (igual que lf-render-carrusel):
 1. Listar la carpeta y elegir 4-6 candidatas por fecha de modificación reciente o tamaño de archivo (proxy de calidad)
 2. Leer/previsualizar solo esas candidatas
 3. Elegir la que mejor encaje con cada slide según composición y tono
+
+### Si dice B — fotos generadas con IA:
+
+> "¿Qué quieres que muestren las imágenes? Puedes darme:
+> - Una descripción general (ej. 'escenas de trabajo, computadora, café, luz natural')
+> - O una descripción específica por slide, si son distintas entre sí"
+
+Generar cada una con el MCP de Nanobanana, llamando directamente:
+```
+mcp__plugin_ghl-skills-fanforce_nanobanana__gemini_generate_image
+→ "[descripción de la escena] · Estilo [nombre] · Paleta [colores] · 1080x1350px, vertical 4:5 (formato carrusel Instagram) · Sin texto"
+```
+Mismo tamaño obligatorio 1080×1350px que cualquier otra imagen Banana del
+carrusel (ver PASO 6.4) — sin foto de origen que editar, se genera desde cero.
+
+### Si dice A o B:
 
 Preguntar el modo de disposición:
 > "¿Cómo usamos las fotos?
@@ -167,7 +190,7 @@ colores de marca, decoración del prompt). Si la foto está sola se ve plano.
 > · [tipo] → Estilo [N] · [Nombre]
 > · ...
 >
-> **Fotos:** [Sí — carpeta: X — modo: Y / No]
+> **Fotos:** [Reales — carpeta: X — modo: Y / Generadas con IA — modo: Y / No]
 > **Modo:** [1x1 / Todos de una]
 >
 > ¿Empezamos?"
@@ -188,9 +211,13 @@ la paleta del estilo.
 
 ### 6.2 — Preparar fotos (si aplica)
 
-Copiar las fotos elegidas al scratchpad del carrusel con nombre simple
+**Fotos reales:** copiar las elegidas al scratchpad del carrusel con nombre simple
 (`foto-slide1.jpg`, `foto-slide3.jpg`) para usar ruta relativa en el HTML —
 igual que lf-render-carrusel: nunca rutas absolutas en `<img src>`.
+
+**Fotos generadas con IA:** generarlas ya directamente en el scratchpad del
+carrusel con el mismo nombre simple (`foto-slide1.jpg`, `foto-slide3.jpg`) —
+ver el prompt de Nanobanana en el PASO 3.
 
 Aplicar en todas las fotos `filter: contrast(1.02) saturate(1.05)` para
 tono consistente sin perder la calidez del diseño.
