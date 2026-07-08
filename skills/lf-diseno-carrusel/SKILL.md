@@ -9,9 +9,10 @@ description: >
   2 / etc.) con la intención de tener los PNG finales. No depende de ningún
   cliente cargado de antemano ni de Google Drive — pide el copy, los colores de
   marca y el handle directamente en el chat, elige un estilo visual de una
-  biblioteca de 40 estilos incluida en este mismo skill, y entrega todos los
-  resultados como imágenes dentro del chat. Si ningún estilo de la biblioteca
-  convence, dirige a `lf-prompt-diseno-carrusel` para crear uno personalizado.
+  biblioteca de 40 estilos incluida en este mismo skill, y entrega el resultado
+  en el chat, guardado como archivos en el computador, o ambas cosas (a elección
+  del usuario). Si ningún estilo de la biblioteca convence, dirige a
+  `lf-prompt-diseno-carrusel` para crear uno personalizado.
 argument-hint: "[pega aquí el copy del carrusel, o dime cuántos carruseles vas a diseñar]"
 ---
 
@@ -19,8 +20,17 @@ argument-hint: "[pega aquí el copy del carrusel, o dime cuántos carruseles vas
 
 Convierte el copy de un carrusel en slides PNG listos para publicar, con un
 estilo visual elegido por carrusel. Todo el proceso ocurre en el chat: se pide
-el copy y la info de marca al inicio, y se entregan las imágenes al final —
-no se guarda nada en Drive ni en el computador como destino permanente.
+el copy y la info de marca al inicio, y se entrega el resultado donde el
+usuario prefiera (chat, carpeta del computador, o ambas) — no se guarda nada
+en Drive ni en ninguna cuenta externa.
+
+> ⚠️ **REGLA #1 DE ESTE SKILL — TAMAÑO FIJO, SIN EXCEPCIÓN:**
+> Todo slide final — sea HTML/CSS, imagen generada con Nanobanana, o foto real
+> procesada — debe medir **1080×1350px** (formato carrusel de Instagram, 4:5
+> vertical). Esto aplica siempre, sin importar el estilo elegido. Verificar el
+> tamaño real de cada PNG antes de darlo por terminado; si algo salió en otra
+> medida, corregirlo (recapturar, regenerar, o hacer crop/resize) antes de
+> mostrarlo o guardarlo. Nunca entregar un slide que no sea 1080×1350px.
 
 ---
 
@@ -58,6 +68,10 @@ Con el copy cargado, mostrar el listado:
 > variedad visual hace el feed más atractivo y evita que se vea como plantilla
 > repetida.
 >
+> Tenemos 40 estilos disponibles. Si quieres ver cada uno con su imagen de
+> ejemplo antes de decidir:
+> 🔗 **https://lanzafacil.com/biblioteca-de-carruseles** · Contraseña: `lanzafacil2026`
+>
 > ¿Cómo quieres elegir los estilos?
 >
 > **A) Yo elijo** — dime un estilo para cada carrusel (nombre o número del 1 al 40)
@@ -67,20 +81,15 @@ Con el copy cargado, mostrar el listado:
 >
 > **C) Ninguno me convence** — quiero usar un diseño de referencia propio"
 
+El link se manda siempre de una vez, junto con la pregunta — no esperar a que
+el usuario pida ver los estilos para dárselo.
+
 ### Si elige A:
 Leer `references/biblioteca-estilos.md` (en este mismo skill) para conocer los 40
 estilos disponibles. Esperar la asignación (nombre o número). Si repite estilo
 en varios carruseles, advertir. Si no conoce los estilos, listar los nombres y
 una línea de descripción de cada uno desde ese mismo archivo — no hace falta
 abrir ningún navegador para elegir.
-
-Si quiere ver los estilos con su vista previa visual real antes de decidir,
-ofrecer también la biblioteca en línea:
-
-> "Si quieres ver cada estilo con su imagen de ejemplo antes de elegir:
-> 🔗 **https://lanzafacil.com/biblioteca-de-carruseles** · Contraseña: `lanzafacil2026`
->
-> Cuando tengas el nombre o número, dímelo y seguimos aquí."
 
 **En cuanto el usuario diga un nombre o número** (haya visto la web o no), ir
 directo a `references/biblioteca-estilos.md` y leer el prompt completo de ese
@@ -170,15 +179,34 @@ colores de marca, decoración del prompt). Si la foto está sola se ve plano.
 
 ---
 
-## PASO 4 — Modo de trabajo
+## PASO 4 — Modo de trabajo y dónde ver el resultado
 
 > "¿Cómo quieres que trabaje?
 >
-> **A) 1 x 1** — diseño cada carrusel, te muestro los PNG aquí en el chat y
->    espero tu aprobación antes de pasar al siguiente
+> **A) 1 x 1** — diseño cada carrusel, te lo muestro y espero tu aprobación
+>    antes de pasar al siguiente
 >
-> **B) Todos de una** — diseño todos en secuencia y te muestro todos los PNG
->    aquí en el chat al terminar"
+> **B) Todos de una** — diseño todos en secuencia y te muestro todo al terminar
+>
+> ¿Y dónde quieres los PNG finales?
+>
+> **A) Aquí en el chat** — te los muestro directamente en la conversación, sin
+>    dejar archivos guardados
+> **B) Guardados en mi computador** — te dejo los PNG en una carpeta (por
+>    defecto tu Escritorio, o dime otra ruta)
+> **C) Ambas** — te los muestro aquí y también te dejo los archivos guardados"
+
+Guardar la elección como `destino_resultado`.
+
+Si eligió B o C y no dio una carpeta propia, detectar el sistema operativo
+para construir la ruta del Escritorio:
+- **macOS / Linux:** `$HOME/Desktop`
+- **Windows:** `%USERPROFILE%\Desktop` (equivalente a `$HOME/Desktop` si Claude
+  Code corre sobre una shell tipo Git Bash o WSL, que normalmente ya resuelve ahí)
+
+Verificar que la carpeta exista antes de usarla (`ls "$HOME/Desktop"` o
+equivalente). Si no existe ni se puede detectar, preguntar la ruta exacta en
+vez de asumir.
 
 ---
 
@@ -192,6 +220,7 @@ colores de marca, decoración del prompt). Si la foto está sola se ve plano.
 >
 > **Fotos:** [Reales — carpeta: X — modo: Y / Generadas con IA — modo: Y / No]
 > **Modo:** [1x1 / Todos de una]
+> **Resultado:** [Chat / Guardado en: X / Ambas]
 >
 > ¿Empezamos?"
 
@@ -375,6 +404,36 @@ darlo por bueno — si Nanobanana devolvió otro tamaño, regenerar o hacer
 crop/resize a 1080×1350px antes de continuar. Nunca capturar/usar una imagen
 que no sea 1080×1350px en un slide completo.
 
+#### Si falta la API key de Nanobanana
+
+Si la tool `mcp__plugin_ghl-skills-fanforce_nanobanana__*` no está disponible,
+o falla con un error de autenticación/API key, no reportarlo simplemente como
+"no se pudo" y seguir sin la imagen. En vez de eso, ofrecer configurarla:
+
+> "Para generar imágenes necesito una API key de Google AI (gratis).
+>
+> 1. Sácala en [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+> 2. Pégamela aquí y yo la dejo configurada — no hace falta que abras terminal ni edites nada a mano."
+
+Cuando la dé, configurarla directamente (Claude tiene acceso al sistema de
+archivos, no hace falta que el usuario lo haga manualmente):
+
+- **macOS / Linux:** detectar el shell (`echo $SHELL`) y agregar la línea al
+  archivo de perfil correspondiente (`~/.zshrc` para zsh, `~/.bashrc` o
+  `~/.bash_profile` para bash) — revisar primero si ya existe una línea
+  `export GOOGLE_AI_API_KEY=` para no duplicarla, y reemplazarla en vez de
+  agregar una nueva si ya está:
+  ```bash
+  export GOOGLE_AI_API_KEY="[key]"
+  ```
+- **Windows:** correr `setx GOOGLE_AI_API_KEY "[key]"` — persiste en las
+  variables de entorno del usuario sin necesidad de editar ningún archivo.
+
+En ambos casos, avisar que **debe reiniciar Claude Code/Desktop por completo**
+(cerrar y volver a abrir) para que la nueva variable se cargue — un proceso ya
+abierto no la ve hasta reiniciar. No repetir la key en texto plano en el chat
+más de lo necesario para confirmarla.
+
 ### 6.5 — Capturar los slides
 
 **Opción A — skill `lf-render-carrusel` (recomendado, resolución retina 2x):**
@@ -436,27 +495,36 @@ Si algo falla → corregir el div en el HTML → recapturar solo ese slide.
 
 ---
 
-## PASO 7 — Mostrar en el chat
+## PASO 7 — Entregar el resultado
 
-Todo el resultado se entrega dentro del chat — no se guarda en Drive ni se
-copia a ninguna carpeta del computador como destino final. Los PNG quedan en
-el scratchpad únicamente como paso intermedio de trabajo.
+No se guarda nada en Drive ni en ninguna cuenta externa. Qué tan lejos llega
+cada carrusel depende de `destino_resultado` (PASO 4):
 
-Mostrar cada PNG generado directamente en la conversación (leer cada archivo
-de imagen para que se renderice inline).
+**Si es "Chat":** solo mostrar cada PNG directamente en la conversación (leer
+cada archivo de imagen para que se renderice inline) — no copiar a ninguna
+carpeta permanente, los PNG quedan solo en el scratchpad como paso intermedio.
 
-Si el usuario eligió modo **1x1**, mostrar cada carrusel apenas esté listo:
+**Si es "Guardado en mi computador":** copiar los PNG a la carpeta confirmada
+y NO mostrarlos inline — solo confirmar la ruta y el conteo.
+```bash
+mkdir -p "[destino]/[nombre-carrusel]"
+cp [scratchpad]/[carrusel N]/slide-*.png "[destino]/[nombre-carrusel]/"
+```
+
+**Si es "Ambas":** hacer los dos pasos anteriores — copiar a la carpeta Y
+mostrar cada PNG inline.
+
+Si el usuario eligió modo **1x1**, entregar cada carrusel apenas esté listo:
 
 > "✅ **Carrusel [tipo]** listo — [N] slides · Estilo [N] · [Nombre]
 >
-> [slide-01.png]
-> [slide-02.png]
-> ...
+> [PNGs inline si el destino incluye chat]
+> [Guardado en: `[destino]/[nombre-carrusel]/` si el destino incluye computador]
 >
 > ¿Lo aprobamos y seguimos con el siguiente?
 > O dime qué ajustar antes de continuar."
 
-Si eligió **todos de una**, mostrar todos los carruseles completos al final,
+Si eligió **todos de una**, entregar todos los carruseles completos al final,
 uno detrás de otro, cada uno con su encabezado de tipo y estilo.
 
 ---
@@ -495,6 +563,15 @@ uno detrás de otro, cada uno con su encabezado de tipo y estilo.
 - Esperar `document.fonts.ready` + 1.5s antes de capturar — las Google Fonts
   deben estar renderizadas o los slides quedan sin tipografía.
 - Verificar el conteo de PNGs contra el número de slides antes de reportar listo.
-- **Todo el resultado se entrega en el chat** — no se guarda en Drive ni se copia
-  a una carpeta del computador como destino final, y no se envían notificaciones
-  externas (Slack u otras).
+- **El resultado se entrega según `destino_resultado`** (PASO 4: chat / carpeta
+  del computador / ambas) — nunca asumir uno sin preguntar. Si es carpeta o
+  ambas, el Escritorio (detectado según el sistema operativo) es el default,
+  pero siempre se confirma antes de empezar. No se guarda nada en Drive ni en
+  ninguna cuenta externa, y no se envían notificaciones externas (Slack u otras).
+- **El PASO 3 (fotos) nunca se salta** — siempre presentar las 3 opciones
+  (reales / generadas con IA / ninguna), incluso si el estilo elegido no usa
+  fotos por defecto.
+- Si `mcp__plugin_ghl-skills-fanforce_nanobanana__*` no está disponible cuando
+  se necesita (fotos con IA o Motor Banana), ver "Si falta la API key de
+  Nanobanana" en el PASO 6.4 antes de continuar — no simplemente omitir la
+  imagen y seguir.

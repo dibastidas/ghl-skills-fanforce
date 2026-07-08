@@ -68,12 +68,21 @@ Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan
 1. Ve a [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 2. Click en **"Get API key"** → crea una nueva
 3. Copia el código que empieza con `AIza...`
-4. Abre tu terminal y corre:
-   ```bash
-   echo 'export GOOGLE_AI_API_KEY="TU_KEY_AQUI"' >> ~/.zshrc
-   source ~/.zshrc
-   ```
-5. Reinicia Claude Code. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
+4. Pégasela directamente a `lf-diseno-carrusel` cuando te la pida — el skill la
+   configura por ti (detecta tu sistema operativo y la deja guardada, sin que
+   tengas que tocar terminal ni archivos).
+
+   O manualmente, si prefieres:
+   - **macOS / Linux** — abre tu terminal y corre:
+     ```bash
+     echo 'export GOOGLE_AI_API_KEY="TU_KEY_AQUI"' >> ~/.zshrc
+     source ~/.zshrc
+     ```
+   - **Windows** — abre PowerShell y corre:
+     ```powershell
+     setx GOOGLE_AI_API_KEY "TU_KEY_AQUI"
+     ```
+5. Reinicia Claude Code/Desktop por completo. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
 
 ---
 
@@ -86,12 +95,17 @@ Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan
 **Costo:** **Gratis (1000 búsquedas/mes)** o de pago para uso intensivo.
 **Cómo activarlo (2 minutos):**
 1. Ve a [tavily.com](https://tavily.com) → crea cuenta gratis → copia tu API key (empieza con `tvly-...`)
-2. Abre tu terminal y corre:
-   ```bash
-   echo 'export TAVILY_API_KEY="TU_KEY_AQUI"' >> ~/.zshrc
-   source ~/.zshrc
-   ```
-3. Reinicia Claude Code. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
+2. Configúrala:
+   - **macOS / Linux** — abre tu terminal y corre:
+     ```bash
+     echo 'export TAVILY_API_KEY="TU_KEY_AQUI"' >> ~/.zshrc
+     source ~/.zshrc
+     ```
+   - **Windows** — abre PowerShell y corre:
+     ```powershell
+     setx TAVILY_API_KEY "TU_KEY_AQUI"
+     ```
+3. Reinicia Claude Code/Desktop por completo. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
 
 *Nota: nunca pongas tu key directamente en `.mcp.json` — este repo es público. Siempre usa la variable de entorno `TAVILY_API_KEY`.*
 

@@ -27,7 +27,10 @@ solo captura lo que ya existe.
 ### Paso 1 — Verificar dependencias
 
 El script es self-contained: usa `puppeteer-core` (no descarga Chromium propio,
-controla el Chrome/Chromium/Brave/Edge que ya tengas instalado en `/Applications`).
+controla el Chrome/Chromium/Brave/Edge que ya tengas instalado). Detecta solo el
+navegador según el sistema operativo — macOS (`/Applications`), Windows
+(`Program Files` / `Local AppData`) o Linux (`/usr/bin`) — sin que el usuario
+tenga que indicar nada.
 
 ```bash
 ls "$(dirname "$0")/node_modules/puppeteer-core" 2>/dev/null
@@ -78,7 +81,8 @@ Opción B vía Playwright MCP si esto falla).
 - Instalar `node_modules` una sola vez; en corridas siguientes ya está disponible.
 - Si el HTML no tiene ningún `.slide`, el script falla explícitamente en vez de
   producir un PNG vacío — reportar el error tal cual.
-- Requiere Chrome, Chromium, Brave o Edge instalado en `/Applications` (macOS).
+- Requiere Chrome, Chromium, Brave o Edge instalado — funciona igual en macOS,
+  Windows y Linux, el script detecta el navegador según el sistema operativo.
 
 ---
 

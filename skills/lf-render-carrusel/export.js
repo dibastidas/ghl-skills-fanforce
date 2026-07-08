@@ -12,6 +12,7 @@
 const puppeteer = require('puppeteer-core');
 const path = require('path');
 const fs = require('fs');
+const { pathToFileURL } = require('url');
 
 // --- Args ---
 const args = process.argv.slice(2);
@@ -36,18 +37,45 @@ const SLIDE_H = getArg('--height', 1350);
 const SCALE = getArg('--scale', 2);
 const OUTPUT_DIR = path.dirname(HTML_FILE);
 
-// --- Detectar Chrome en macOS ---
-const CHROME_CANDIDATES = [
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
-  '/Applications/Chromium.app/Contents/MacOS/Chromium',
-  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-];
-const CHROME_PATH = CHROME_CANDIDATES.find(p => fs.existsSync(p));
+// --- Detectar Chrome/Chromium/Brave/Edge según el sistema operativo ---
+const CANDIDATES_BY_PLATFORM = {
+  darwin: [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+  ],
+  win32: [
+    path.join(process.env['PROGRAMFILES'] || 'C:\\Program Files', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(process.env['LOCALAPPDATA'] || '', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(process.env['PROGRAMFILES'] || 'C:\\Program Files', 'Microsoft\\Edge\\Application\\msedge.exe'),
+    path.join(process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)', 'Microsoft\\Edge\\Application\\msedge.exe'),
+    path.join(process.env['PROGRAMFILES'] || 'C:\\Program Files', 'BraveSoftware\\Brave-Browser\\Application\\brave.exe'),
+    path.join(process.env['LOCALAPPDATA'] || '', 'BraveSoftware\\Brave-Browser\\Application\\brave.exe'),
+  ],
+  linux: [
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+    '/usr/bin/microsoft-edge',
+    '/usr/bin/brave-browser',
+    '/snap/bin/chromium',
+  ],
+};
+
+const CHROME_CANDIDATES = CANDIDATES_BY_PLATFORM[process.platform] || CANDIDATES_BY_PLATFORM.linux;
+const CHROME_PATH = CHROME_CANDIDATES.find(p => p && fs.existsSync(p));
 
 if (!CHROME_PATH) {
-  console.error('No se encontró Chrome/Chromium/Brave/Edge en /Applications. Instala Google Chrome.');
+  const hint = process.platform === 'win32'
+    ? 'Instala Google Chrome o Microsoft Edge.'
+    : process.platform === 'darwin'
+      ? 'Instala Google Chrome en /Applications.'
+      : 'Instala Google Chrome o Chromium (ej. `apt install chromium-browser`).';
+  console.error(`No se encontró Chrome/Chromium/Brave/Edge en este sistema (${process.platform}). ${hint}`);
   process.exit(1);
 }
 
@@ -60,7 +88,7 @@ if (!CHROME_PATH) {
   });
 
   const page = await browser.newPage();
-  await page.goto('file://' + HTML_FILE, { waitUntil: 'networkidle0' });
+  await page.goto(pathToFileURL(HTML_FILE).href, { waitUntil: 'networkidle0' });
 
   // Esperar que Google Fonts terminen de cargar
   await page.evaluate(() => document.fonts.ready);
