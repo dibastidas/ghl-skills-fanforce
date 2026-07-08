@@ -1,8 +1,8 @@
 {
   "name": "ghl-skills-fanforce",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "GHL Skills — Fanforce",
-  "description": "Skills para publicar videos y crear automatizaciones de comentarios en GoHighLevel.",
+  "description": "Skills para publicar videos y crear automatizaciones de comentarios en GoHighLevel, más diseño y copy de carruseles con Nanobanana y Playwright.",
   "author": "Fanforce",
   "skills": [
     {
@@ -12,11 +12,26 @@
     {
       "name": "ghl-automatizar-comentarios",
       "path": "skills/ghl-automatizar-comentarios/ghl-automatizar-comentarios.md"
-    }
     },
     {
       "name": "ghl-automatizar-comentarios-chrome",
       "path": "skills/ghl-automatizar-comentarios-chrome/ghl-automatizar-comentarios-chrome.md"
+    },
+    {
+      "name": "lf-diseno-carrusel",
+      "path": "skills/lf-diseno-carrusel/SKILL.md"
+    },
+    {
+      "name": "lf-creador-copies-carruseles",
+      "path": "skills/lf-creador-copies-carruseles/SKILL.md"
+    },
+    {
+      "name": "lf-prompt-diseno-carrusel",
+      "path": "skills/lf-prompt-diseno-carrusel/SKILL.md"
+    },
+    {
+      "name": "lf-render-carrusel",
+      "path": "skills/lf-render-carrusel/SKILL.md"
     }
   ]
 }

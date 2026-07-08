@@ -1,0 +1,13 @@
+{
+  "name": "lf-render-carrusel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Exporta el HTML de un carrusel a slides PNG individuales en resolución retina 2x",
+  "main": "export.js",
+  "scripts": {
+    "export": "node export.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.42.0"
+  }
+}

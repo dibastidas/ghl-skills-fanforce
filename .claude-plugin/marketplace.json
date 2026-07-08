@@ -1,10 +1,10 @@
 {
   "name": "ghl-skills-fanforce",
   "displayName": "GHL Skills — Fanforce",
-  "description": "Skills para publicar videos en redes sociales y crear automatizaciones de respuesta a comentarios directamente desde GoHighLevel. Incluye verificación de canales conectados, programación de posts y creación de workflows de comentarios para Instagram y Facebook.",
+  "description": "Skills para publicar videos en redes sociales y crear automatizaciones de respuesta a comentarios directamente desde GoHighLevel, más diseño y copy de carruseles con Nanobanana y Playwright. Incluye verificación de canales conectados, programación de posts y creación de workflows de comentarios para Instagram y Facebook.",
   "author": "Fanforce",
-  "version": "1.0.0",
-  "tags": ["ghl", "gohighlevel", "social media", "automatizacion", "instagram", "facebook"],
+  "version": "1.1.0",
+  "tags": ["ghl", "gohighlevel", "social media", "automatizacion", "instagram", "facebook", "carrusel", "nanobanana", "playwright"],
   "skills": [
     {
       "name": "ghl-publicar",
@@ -15,6 +15,31 @@
       "name": "ghl-automatizar-comentarios",
       "displayName": "Automatizar Comentarios en GHL",
       "description": "Crea una automatización en GHL para responder automáticamente cuando alguien comenta una palabra clave en un reel. Responde en el comentario, envía DM y etiqueta el contacto. Solo Instagram y Facebook."
+    },
+    {
+      "name": "ghl-automatizar-comentarios-chrome",
+      "displayName": "Automatizar Comentarios en GHL (Chrome)",
+      "description": "Recopila la configuración del autoresponder de comentarios y genera un prompt listo para ejecutar con la extensión Claude for Chrome sobre GoHighLevel. Solo Instagram y Facebook."
+    },
+    {
+      "name": "lf-diseno-carrusel",
+      "displayName": "Diseño Visual de Carrusel",
+      "description": "Pide el copy y los colores de marca directamente en el chat y diseña slides PNG 1080×1350px listos para Instagram, eligiendo entre 40 estilos incluidos. Entrega todo en el chat, sin guardar en Drive ni en el computador."
+    },
+    {
+      "name": "lf-creador-copies-carruseles",
+      "displayName": "Copy de Carruseles",
+      "description": "Pide el avatar y el tono de marca directamente en el chat, investiga carruseles virales reales y escribe el copy completo slide por slide. Entrega todo en el chat, sin guardar en Drive ni en el computador."
+    },
+    {
+      "name": "lf-prompt-diseno-carrusel",
+      "displayName": "Prompt de Diseño Personalizado",
+      "description": "Construye un prompt de diseño de carrusel a medida cuando ninguno de los 40 estilos incluidos convence, a partir de una referencia y los colores de marca dados en el chat."
+    },
+    {
+      "name": "lf-render-carrusel",
+      "displayName": "Motor de Render de Carrusel",
+      "description": "Exporta un HTML de carrusel a slides PNG individuales en resolución retina 2x. Motor interno que usa lf-diseno-carrusel."
     }
   ]
 }
