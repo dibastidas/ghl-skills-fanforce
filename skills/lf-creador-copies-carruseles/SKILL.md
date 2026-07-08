@@ -90,6 +90,39 @@ Usar `mcp__plugin_ghl-skills-fanforce_tavily__tavily_search` para cada una. Extr
 - Descripciones de estructuras que funcionan
 - Primeras palabras de slides que generaron engagement
 
+#### Si falta la API key de Tavily
+
+Si la tool `mcp__plugin_ghl-skills-fanforce_tavily__*` no está disponible, o
+la búsqueda falla con un error de autenticación, **nunca reportarlo como
+"se acabaron los tokens" o algo parecido** — eso no es lo que está pasando,
+lo que falta es la API key. Ofrecer configurarla:
+
+> "Para buscar carruseles virales en la web necesito una API key de Tavily (gratis).
+>
+> 1. Sácala en [tavily.com](https://tavily.com) — crea cuenta gratis, la key empieza con `tvly-...`
+> 2. Pégamela aquí y yo la dejo configurada — no hace falta que abras terminal ni edites nada a mano."
+
+Cuando la dé, configurarla directamente (Claude tiene acceso al sistema de
+archivos, no hace falta que el usuario lo haga manualmente):
+
+- **macOS / Linux:** detectar el shell (`echo $SHELL`) y agregar la línea al
+  archivo de perfil correspondiente (`~/.zshrc` para zsh, `~/.bashrc` o
+  `~/.bash_profile` para bash) — revisar primero si ya existe una línea
+  `export TAVILY_API_KEY=` para no duplicarla, y reemplazarla en vez de
+  agregar una nueva si ya está:
+  ```bash
+  export TAVILY_API_KEY="[key]"
+  ```
+- **Windows:** correr `setx TAVILY_API_KEY "[key]"` — persiste en las
+  variables de entorno del usuario sin necesidad de editar ningún archivo.
+
+En ambos casos, avisar que **debe reiniciar Claude Code/Desktop por completo**
+(cerrar y volver a abrir) para que la nueva variable se cargue — un proceso ya
+abierto no la ve hasta reiniciar. No repetir la key en texto plano en el chat
+más de lo necesario para confirmarla. Mientras tanto, continuar la
+investigación con las Fases B y C (Playwright y Supadata) y retomar la
+búsqueda de Tavily cuando la key ya esté activa.
+
 ### FASE B — Exploración en Instagram con Playwright
 
 Abrir Instagram Explore y buscar carruseles de alto engagement:
@@ -362,3 +395,6 @@ No guardar nada en Drive ni en el computador — la entrega es este mensaje.
   a un público genérico.
 - Lenguaje natural y visceral, basado en el fragmento de tono que dio el usuario.
 - Todo se entrega en el chat. No se guarda nada en Drive ni en el computador.
+- **Si falta la API key de Tavily, nunca decir "se acabaron los tokens" ni nada
+  parecido** — ver "Si falta la API key de Tavily" en la FASE A y ofrecer
+  configurarla directamente en vez de reportar un error genérico.
