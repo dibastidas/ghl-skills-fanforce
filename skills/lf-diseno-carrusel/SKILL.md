@@ -8,14 +8,14 @@ description: >
   slides", o cualquier variación que combine un copy de carrusel (slide 1 / slide
   2 / etc.) con la intención de tener los PNG finales. No depende de ningún
   cliente cargado de antemano ni de Google Drive — primero verifica que
-  Playwright y Nanobanana estén conectados (guiando la configuración paso a
-  paso, con una prueba real antes de continuar, si falta la API key de
-  Nanobanana), luego pide el copy, los colores de marca y el handle
-  directamente en el chat, elige un estilo visual de una biblioteca de 40
-  estilos incluida en este mismo skill, y entrega el resultado en el chat,
-  guardado como archivos en el computador, o ambas cosas (a elección del
-  usuario). Si ningún estilo de la biblioteca convence, dirige a
-  `lf-prompt-diseno-carrusel` para crear uno personalizado.
+  Playwright esté conectado (obligatorio) y ofrece conectar Nanobanana
+  (opcional, requiere pago — el usuario puede seguir sin ella y usar fotos
+  reales en vez de generadas con IA), luego pide el copy, los colores de
+  marca y el handle directamente en el chat, elige un estilo visual de una
+  biblioteca de 40 estilos incluida en este mismo skill, y entrega el
+  resultado en el chat, guardado como archivos en el computador, o ambas
+  cosas (a elección del usuario). Si ningún estilo de la biblioteca
+  convence, dirige a `lf-prompt-diseno-carrusel` para crear uno personalizado.
 argument-hint: "[pega aquí el copy del carrusel, o dime cuántos carruseles vas a diseñar]"
 ---
 
@@ -47,20 +47,31 @@ skill necesita están disponibles:
 **Si las 2 están disponibles y responden, no decir nada de esto al usuario —
 pasar directo al PASO 1.**
 
-### Si falta Nanobanana (lo más común — necesita una API key personal)
+### Si falta Nanobanana (necesita pago — es opcional, no bloquea el skill)
 
-> "Antes de arrancar necesito que conectes una cosa: Nanobanana, el motor que
-> genera las imágenes. Vamos paso a paso, es rápido."
+> "Te falta configurar Nano Banana para generar imágenes. Este paso requiere
+> una cuenta de Google con facturación habilitada (algo así como una
+> suscripción/tarjeta vinculada) — el modelo no tiene versión gratis, cobra
+> por imagen (≈$0.04 c/u).
+>
+> Si no quieres pagar por esto, no hay problema — podemos seguir sin este
+> paso. Cuando lleguemos a las fotos, me pasas imágenes ya hechas o diseñamos
+> sin fotos.
+>
+> ¿Quieres configurarlo ahora, o seguimos sin este paso?"
 
-Dar los pasos más específicos posibles, como si la persona nunca hubiera
-sacado una API key — sin asumir que sabe qué es eso:
+**Si dice que sí (quiere configurarlo):** dar los pasos más específicos
+posibles, como si la persona nunca hubiera sacado una API key — sin asumir
+que sabe qué es eso:
 
 1. "Abre esta página en tu navegador: [aistudio.google.com/apikey](https://aistudio.google.com/apikey)"
 2. "Inicia sesión con tu cuenta de Google si te lo pide"
 3. "Busca el botón que dice 'Create API key' o 'Get API key' y haz clic ahí"
-4. "Te va a aparecer un código que empieza con `AIza...` — ese es tu 'API key'.
+4. "Si te pide vincular una tarjeta o habilitar facturación, es esperado —
+   este modelo no tiene modo gratis. Complétalo."
+5. "Te va a aparecer un código que empieza con `AIza...` — ese es tu 'API key'.
    Haz clic en el ícono de copiar al lado del código."
-5. "Pégamelo aquí en el chat."
+6. "Pégamelo aquí en el chat."
 
 Cuando la dé, configurarla (mismo procedimiento técnico que en "Si falta la
 API key de Nanobanana" del PASO 6.4) y **probarla antes de seguir**: generar
@@ -69,12 +80,16 @@ tipo "círculo azul simple, sin texto") para confirmar que responde de verdad.
 Si funciona, confirmar al usuario y descartar esa imagen de prueba. Si falla:
 
 > "Diste la key, pero todavía no está respondiendo. Puede ser que necesite un
-> momento para activarse, o que se copió algo de más o de menos. Espero unos
-> segundos y vuelvo a probar — si sigue sin funcionar, revisa que la copiaste
-> completa, sin espacios extra."
+> momento para activarse, que falte habilitar facturación, o que se copió
+> algo de más o de menos. Espero unos segundos y vuelvo a probar — si sigue
+> sin funcionar, revisa que la copiaste completa, sin espacios extra."
 
-Esperar y reintentar un par de veces antes de escalar. Nunca decir que el
-motor "no funciona" sin haber intentado esto primero.
+Esperar y reintentar un par de veces antes de escalar.
+
+**Si dice que no (prefiere seguir sin esto):** continuar al PASO 1 sin
+Nanobanana conectado — no insistir ni volver a preguntar aquí. La única otra
+vez que se vuelve a ofrecer es si el usuario pide explícitamente "fotos
+generadas con IA" en el PASO 3 (ver ahí).
 
 ### Si falta Playwright (menos común — no necesita ninguna key)
 
@@ -87,8 +102,10 @@ No hay nada que configurar aquí con una key — si falta, es un problema de
 instalación del plugin, no de credenciales, así que no hay auto-configuración
 posible.
 
-**Solo cuando todo esté confirmado conectado** (probado con una llamada real,
-no solo "dijo que sí"), pasar al PASO 1.
+**Playwright es obligatorio** — pasar al PASO 1 solo cuando esté confirmado
+que responde (probado, no solo "dijo que sí"). **Nanobanana es opcional** —
+si el usuario prefirió seguir sin conectarlo, pasar al PASO 1 igual, sin
+esperar por él.
 
 ---
 
@@ -183,8 +200,9 @@ Esperar. Si pega el prompt, usarlo como guía de diseño.
 > "¿Quieres incluir fotos en algún carrusel?
 >
 > **A) Sí, fotos reales** — dame la ruta de la carpeta local con las fotos
-> **B) Sí, generadas con IA** — Nanobanana crea las imágenes por ti (útil si
->    no tienes fotos propias pero quieres el estilo con foto)
+> **B) Sí, generadas con IA** (requiere conectar Nanobanana) — Nanobanana crea
+>    las imágenes por ti (útil si no tienes fotos propias pero quieres el
+>    estilo con foto)
 > **C) No** — diseño 100% tipográfico"
 
 Si el estilo elegido ya es muy visual por sí mismo (mucha decoración, texturas,
@@ -201,6 +219,24 @@ pero sin decidir por el usuario.
 3. Elegir la que mejor encaje con cada slide según composición y tono
 
 ### Si dice B — fotos generadas con IA:
+
+**Si Nanobanana no está conectada** (no se configuró en el PASO 0, o el
+usuario dijo que no en ese momento):
+
+> "Para esto necesito Nano Banana, pero no está conectada — requiere pago
+> para conectarla (facturación habilitada en tu cuenta de Google, cobra por
+> imagen). ¿Quieres conectarla ahora?"
+
+- **Si dice que sí:** dar los mismos pasos específicos del PASO 0 ("Si falta
+  Nanobanana") y **esperar a que la configure y quede confirmada funcionando**
+  antes de seguir con las imágenes — no continuar el resto del flujo mientras
+  tanto.
+- **Si dice que no:** no insistir más.
+  > "Sin problema — entonces mejor pásame las fotos ya hechas. Dame la ruta
+  > de la carpeta local y seguimos con la opción A."
+  Tratarlo como si hubiera elegido la opción A (fotos reales) desde ahí.
+
+**Si Nanobanana sí está conectada**, seguir normalmente:
 
 > "¿Qué quieres que muestren las imágenes? Puedes darme:
 > - Una descripción general (ej. 'escenas de trabajo, computadora, café, luz natural')
@@ -468,10 +504,17 @@ Si la tool `mcp__plugin_ghl-skills-fanforce_nanobanana__*` no está disponible,
 o falla con un error de autenticación/API key, no reportarlo simplemente como
 "no se pudo" y seguir sin la imagen. En vez de eso, ofrecer configurarla:
 
-> "Para generar imágenes necesito una API key de Google AI (gratis).
+> "Para generar imágenes necesito una API key de Google AI. Ojo: crear la key
+> es gratis, pero el modelo que genera las imágenes (Gemini 2.5 Flash Image,
+> 'Nano Banana') **no tiene tier gratuito** — cobra por imagen (≈$0.04 c/u,
+> más barato que casi cualquier alternativa) y necesita que tu cuenta de
+> Google tenga facturación habilitada (una tarjeta vinculada), si no las
+> llamadas van a fallar aunque la key sea válida.
 >
 > 1. Sácala en [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
-> 2. Pégamela aquí y yo la dejo configurada — no hace falta que abras terminal ni edites nada a mano."
+> 2. Si no tienes facturación habilitada, el mismo sitio te va a pedir vincular
+>    una tarjeta — es normal, este modelo específico lo requiere.
+> 3. Pégamela aquí y yo la dejo configurada — no hace falta que abras terminal ni edites nada a mano."
 
 Cuando la dé, configurarla directamente (Claude tiene acceso al sistema de
 archivos, no hace falta que el usuario lo haga manualmente):
@@ -602,10 +645,13 @@ uno detrás de otro, cada uno con su encabezado de tipo y estilo.
 
 ## REGLAS
 
-- **PASO 0 siempre primero, en silencio si todo está bien.** Nunca pedir el
-  copy sin haber confirmado que Playwright y Nanobanana responden. Si falta
-  Nanobanana, guiar la configuración paso a paso (ver PASO 0) y probarla con
-  una imagen real antes de continuar — nunca solo asumir que ya quedó lista.
+- **PASO 0 siempre primero, en silencio si todo está bien.** Playwright es
+  obligatorio — nunca pedir el copy sin confirmar que responde. Nanobanana es
+  opcional y de pago — si falta, ofrecer configurarla (con los pasos del PASO
+  0) pero seguir sin problema si el usuario prefiere no pagar por eso; en ese
+  caso, solo se vuelve a ofrecer si el usuario pide fotos generadas con IA en
+  el PASO 3, y ahí sí, si vuelve a decir que no, encaminarlo a fotos reales
+  en vez de insistir.
 - No requiere ningún cliente cargado de antemano — el copy, los colores de
   marca y el handle se piden directamente en el chat en el PASO 1.
 - Advertir si se repite el mismo estilo en varios carruseles.

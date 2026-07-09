@@ -14,10 +14,11 @@
 | 🔥 **ESENCIALES** (2) | Necesitas estos sí o sí | Nada de GHL ni de carruseles funciona |
 | ⭐ **RECOMENDADOS** (3) | Súbete cuando puedas | Los carruseles pierden features |
 
-Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan solos (OAuth), Nanobanana y Tavily solo piden que exportes su API key.
+Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan solos (OAuth), Nanobanana y Tavily solo piden que exportes su API key. Nanobanana es el único que **no tiene tier gratis** — es opcional, el resto del plugin funciona sin él.
 
 **Costo total mínimo (esenciales):** $0/mes (usas tu cuenta GHL que ya pagas)
-**Costo total máximo (todo activado):** ~$30-60/mes
+**Costo total si activas todo excepto Nanobanana:** ~$0-30/mes (Tavily/Supadata tienen tier gratis)
+**Nanobanana (si lo activas):** variable según uso, ≈$0.04 por imagen — no es una cuota fija
 
 ---
 
@@ -56,21 +57,23 @@ Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan
 
 ## ⭐ RECOMENDADOS (solo si usas los skills de carrusel)
 
-### 3. Nanobanana (Google Gemini)
-**¿Para qué?** Genera y edita **imágenes con IA**. Es el motor visual de los slides de carrusel.
+### 3. Nanobanana (Google Gemini 2.5 Flash Image)
+**¿Para qué?** Genera y edita **imágenes con IA**. Es el motor visual de los slides de carrusel que lo requieren.
 
 **Skills que dependen de esto:**
-- `lf-diseno-carrusel`
+- `lf-diseno-carrusel` — pero es **opcional**: sin Nanobanana, el skill sigue funcionando con estilos 100% HTML/CSS y fotos reales, solo pierde la opción de generar imágenes con IA.
 
-**Costo:** **Gratis hasta cierto límite** (Google da $200 de crédito al mes en el tier gratis, más que suficiente)
+**Costo:** ⚠️ **NO tiene tier gratuito** — a diferencia de los otros MCP de esta lista, este modelo cobra por imagen desde la primera llamada: **≈$0.04 por imagen** (más barato que casi cualquier alternativa, pero no es gratis). Requiere que tu cuenta de Google tenga **facturación habilitada** (tarjeta vinculada) — sin eso, la key se crea pero las llamadas fallan.
 
 **Cómo activarlo (5 minutos):**
 1. Ve a [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 2. Click en **"Get API key"** → crea una nueva
-3. Copia el código que empieza con `AIza...`
-4. Pégasela directamente a `lf-diseno-carrusel` cuando te la pida — el skill la
+3. Si te pide vincular una tarjeta o habilitar facturación, es esperado — este modelo específico no tiene modo gratis
+4. Copia el código que empieza con `AIza...`
+5. Pégasela directamente a `lf-diseno-carrusel` cuando te la pida — el skill la
    configura por ti (detecta tu sistema operativo y la deja guardada, sin que
-   tengas que tocar terminal ni archivos).
+   tengas que tocar terminal ni archivos). El skill también te ofrece seguir
+   sin ella si prefieres no pagar por esto — puedes usar fotos reales en su lugar.
 
    O manualmente, si prefieres:
    - **macOS / Linux** — abre tu terminal y corre:
@@ -82,7 +85,7 @@ Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan
      ```powershell
      setx GOOGLE_AI_API_KEY "TU_KEY_AQUI"
      ```
-5. Reinicia Claude Code/Desktop por completo. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
+6. Reinicia Claude Code/Desktop por completo. ¡Listo! (Ya viene declarado en `.mcp.json`, solo falta la key.)
 
 ---
 
@@ -133,20 +136,25 @@ Los 5 vienen **declarados** en `.mcp.json` — Playwright y Supadata se conectan
 
 **Skills que funcionan:** `ghl-publicar`, `ghl-automatizar-comentarios`, `ghl-automatizar-comentarios-chrome`
 
-### 🚀 ETAPA 2 — Sumas diseño y copy de carruseles ($0-30/mes)
+### 🚀 ETAPA 2 — Sumas diseño y copy de carruseles ($0/mes extra)
 Suma:
-- Nanobanana (gratis hasta el límite)
 - Tavily tier free (gratis)
 - Supadata tier free (gratis)
 
-**Skills que funcionan:** 100% del plugin
+**Skills que funcionan:** 100% del plugin usando estilos HTML/CSS y fotos reales — sin gastar nada.
+
+### 💎 ETAPA 3 (opcional) — Imágenes generadas con IA (variable según uso)
+Suma:
+- Nanobanana (≈$0.04 por imagen, requiere facturación habilitada — no tiene tier gratis)
+
+**Para qué sirve:** solo si quieres que `lf-diseno-carrusel` genere imágenes con IA en vez de usar únicamente fotos reales o estilos tipográficos. El resto del plugin funciona igual sin esto.
 
 ---
 
 ## ❓ Preguntas frecuentes
 
 ### "¿Tengo que activar todos los MCPs antes de usar las skills?"
-**No.** Activa HighLevel y Playwright y arranca con los skills de GHL. Suma Nanobanana, Tavily y Supadata cuando llegues a los skills de carrusel.
+**No.** Activa HighLevel y Playwright y arranca con los skills de GHL. Suma Tavily y Supadata cuando llegues a los skills de carrusel — ambos son gratis. Nanobanana es aparte y de pago: actívalo solo si de verdad quieres generar imágenes con IA.
 
 ### "¿Las skills me avisan si me falta un MCP?"
 **Sí.** Cada skill detecta qué MCPs tiene disponibles y te avisa si uno está faltando, explicándote cómo activarlo.
