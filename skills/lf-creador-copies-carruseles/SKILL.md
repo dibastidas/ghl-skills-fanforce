@@ -7,8 +7,10 @@ description: >
   alguien diga: "hazme el copy de mis carruseles", "escribe un carrusel para
   Instagram", "necesito N carruseles sobre X", "crea el copy de un carrusel",
   o cualquier variación que pida contenido de carrusel para redes sociales. No
-  depende de ningún cliente ni oferta cargados de antemano — pregunta el avatar,
-  la marca y el tono directamente en el chat. Antes de escribir, investiga
+  depende de ningún cliente ni oferta cargados de antemano — primero verifica
+  que Playwright, Tavily y Supadata estén conectados (guiando la configuración
+  paso a paso si falta alguno), luego pregunta el avatar, la marca y el tono
+  directamente en el chat, una pregunta a la vez. Antes de escribir, investiga
   carruseles virales reales con Playwright y Tavily, extrae sus estructuras
   narrativas y las adapta al contenido. Entrega todo en el chat — no guarda nada
   en Drive ni en el computador.
@@ -27,19 +29,80 @@ mundo, hay que reescribirlo.
 
 ---
 
-## PASO 1 — Marca, avatar y tono
+## PASO 0 — Verificar que todo esté conectado
 
-Preguntar directamente en el chat, en un solo bloque:
+Antes de pedir cualquier información de marca, confirmar en silencio que las
+3 herramientas que este skill necesita están disponibles:
+- **Playwright** (`mcp__plugin_ghl-skills-fanforce_playwright__*`) — explorar Instagram
+- **Tavily** (`mcp__plugin_ghl-skills-fanforce_tavily__*`) — buscar en la web
+- **Supadata** (`mcp__plugin_ghl-skills-fanforce_supadata__*`) — extraer contenido de posts
 
-> "Para escribir copy que suene a ti y no genérico, necesito:
+**Si las 3 están disponibles y responden, no decir nada de esto al usuario —
+pasar directo al PASO 1.**
+
+**Si falta una o más:**
+
+> "Antes de arrancar necesito que conectes [N] cosa(s):
+> · [ ] Tavily — para buscar carruseles virales en internet
+> · [ ] Supadata — para leer el contenido de esos carruseles
 >
-> 1. **Marca o negocio:** ¿cómo se llama y a qué se dedica?
-> 2. **Avatar:** ¿a quién le hablas? Dolores, deseos, objeciones — lo que sepas.
-> 3. **Tono de voz:** ¿cómo hablas normalmente? Si tienes un fragmento de algo
->    que ya escribiste o dijiste (200-300 palabras), pégalo — ayuda muchísimo
->    a que el copy no suene genérico.
-> 4. **Handle de Instagram:** @[tu handle]
-> 5. **Palabra clave para CTA** (opcional): si vas a pedir "comenta X" en algún carrusel."
+> Vamos una por una, con calma."
+
+### Configurar de a una — nunca todas juntas
+
+Para cada una que falte, dar los pasos más específicos posibles, como si la
+persona nunca hubiera usado nada de esto — sin asumir que sabe qué es una
+"API key" o una terminal. No pasar a configurar la siguiente hasta confirmar
+(con una prueba real, no solo "ya la puse") que la anterior ya funciona.
+
+**Si falta Tavily:**
+1. "Abre esta página en tu navegador: [tavily.com](https://tavily.com)"
+2. "Busca el botón que dice 'Sign Up' o 'Get Started' y haz clic ahí"
+3. "Crea tu cuenta con tu correo — es gratis, no pide tarjeta"
+4. "Cuando entres, vas a ver un código que empieza con `tvly-...` — ese es tu
+   'API key'. Cópialo completo, tal cual aparece."
+5. "Pégamelo aquí en el chat."
+
+Cuando la dé, configurarla (mismo procedimiento técnico que en la sección
+"Si falta la API key de Tavily" más abajo) y **probarla antes de seguir**:
+hacer una búsqueda pequeña de prueba con `tavily_search`. Si responde, confirmar
+al usuario y seguir con la siguiente pendiente. Si falla:
+
+> "Diste la key bien, pero a veces Tavily tarda unos minutos en activarla del
+> todo después de crearla. Vamos a esperar un poco y vuelvo a probar."
+
+Esperar y reintentar un par de veces antes de decir que algo anda mal — nunca
+decir que "se acabaron los tokens" ni que hay un problema con la cuenta,
+normalmente es solo cuestión de esperar a que se active.
+
+**Si falta Supadata:**
+1. "Escribe `/mcp` aquí en el chat y presiona enter"
+2. "En la lista que aparece, busca donde dice 'supadata'"
+3. "Haz clic ahí y elige la opción de conectar/autorizar"
+4. "Te va a abrir el navegador para iniciar sesión — hazlo con tu cuenta normal"
+5. "Cuando termine, vuelve aquí y dime 'listo'"
+
+Confirmar que la conexión responde antes de dar por resuelto.
+
+Solo cuando **todo** esté confirmado conectado (probado, no solo "dijo que sí"),
+pasar al PASO 1.
+
+---
+
+## PASO 1 — Marca, avatar y tono (una pregunta a la vez)
+
+**Nunca hacer todas estas preguntas juntas.** Ir una por una, esperando la
+respuesta antes de pasar a la siguiente:
+
+1. "¿Cómo se llama tu marca o negocio, y a qué se dedica?"
+2. "¿A quién le hablas? Cuéntame de tu avatar — sus dolores, deseos, lo que
+   le frustra, lo que sepas."
+3. "¿Cómo hablas normalmente? Si tienes un fragmento de algo que ya
+   escribiste o dijiste (200-300 palabras), pégalo — ayuda muchísimo a que
+   el copy no suene genérico."
+4. "¿Cuál es tu handle de Instagram?"
+5. "¿Tienes una palabra clave para pedir comentarios en algún carrusel?
+   (opcional — ej. 'comenta GUÍA'). Si no, dime 'no' y seguimos."
 
 Guardar esta info como contexto de marca para el resto de la sesión. No pedirla
 de nuevo si ya la dio.
@@ -382,6 +445,12 @@ No guardar nada en Drive ni en el computador — la entrega es este mensaje.
 
 ## REGLAS DEL SKILL
 
+- **PASO 0 siempre primero, en silencio si todo está bien.** Nunca empezar a
+  pedir info de marca sin haber confirmado que Playwright, Tavily y Supadata
+  responden. Si falta más de uno, configurarlos de a uno, probando cada uno
+  antes de pasar al siguiente — nunca pedir todas las keys/autorizaciones juntas.
+- **Una pregunta a la vez, en todo el skill** — nunca varias preguntas en un
+  mismo mensaje (ver PASO 1). Esperar la respuesta antes de hacer la siguiente.
 - No requiere ningún cliente ni oferta cargados de antemano — el avatar, la
   marca y el tono se piden directamente en el chat en el PASO 1.
 - La investigación (PASO 3) es OBLIGATORIA — no se escribe sin ella. Aunque los
