@@ -7,11 +7,14 @@ description: >
   imágenes de este carrusel", "convierte este copy en slides", "renderiza estos
   slides", o cualquier variación que combine un copy de carrusel (slide 1 / slide
   2 / etc.) con la intención de tener los PNG finales. No depende de ningún
-  cliente cargado de antemano ni de Google Drive — pide el copy, los colores de
-  marca y el handle directamente en el chat, elige un estilo visual de una
-  biblioteca de 40 estilos incluida en este mismo skill, y entrega el resultado
-  en el chat, guardado como archivos en el computador, o ambas cosas (a elección
-  del usuario). Si ningún estilo de la biblioteca convence, dirige a
+  cliente cargado de antemano ni de Google Drive — primero verifica que
+  Playwright y Nanobanana estén conectados (guiando la configuración paso a
+  paso, con una prueba real antes de continuar, si falta la API key de
+  Nanobanana), luego pide el copy, los colores de marca y el handle
+  directamente en el chat, elige un estilo visual de una biblioteca de 40
+  estilos incluida en este mismo skill, y entrega el resultado en el chat,
+  guardado como archivos en el computador, o ambas cosas (a elección del
+  usuario). Si ningún estilo de la biblioteca convence, dirige a
   `lf-prompt-diseno-carrusel` para crear uno personalizado.
 argument-hint: "[pega aquí el copy del carrusel, o dime cuántos carruseles vas a diseñar]"
 ---
@@ -31,6 +34,61 @@ en Drive ni en ninguna cuenta externa.
 > tamaño real de cada PNG antes de darlo por terminado; si algo salió en otra
 > medida, corregirlo (recapturar, regenerar, o hacer crop/resize) antes de
 > mostrarlo o guardarlo. Nunca entregar un slide que no sea 1080×1350px.
+
+---
+
+## PASO 0 — Verificar que todo esté conectado
+
+Antes de pedir el copy, confirmar en silencio que las 2 herramientas que este
+skill necesita están disponibles:
+- **Playwright** (`mcp__plugin_ghl-skills-fanforce_playwright__*`) — fallback de captura y ver la biblioteca visual de estilos
+- **Nanobanana** (`mcp__plugin_ghl-skills-fanforce_nanobanana__*`) — generar imágenes con IA (Motor Banana)
+
+**Si las 2 están disponibles y responden, no decir nada de esto al usuario —
+pasar directo al PASO 1.**
+
+### Si falta Nanobanana (lo más común — necesita una API key personal)
+
+> "Antes de arrancar necesito que conectes una cosa: Nanobanana, el motor que
+> genera las imágenes. Vamos paso a paso, es rápido."
+
+Dar los pasos más específicos posibles, como si la persona nunca hubiera
+sacado una API key — sin asumir que sabe qué es eso:
+
+1. "Abre esta página en tu navegador: [aistudio.google.com/apikey](https://aistudio.google.com/apikey)"
+2. "Inicia sesión con tu cuenta de Google si te lo pide"
+3. "Busca el botón que dice 'Create API key' o 'Get API key' y haz clic ahí"
+4. "Te va a aparecer un código que empieza con `AIza...` — ese es tu 'API key'.
+   Haz clic en el ícono de copiar al lado del código."
+5. "Pégamelo aquí en el chat."
+
+Cuando la dé, configurarla (mismo procedimiento técnico que en "Si falta la
+API key de Nanobanana" del PASO 6.4) y **probarla antes de seguir**: generar
+una imagen mínima de prueba (ej. `gemini_generate_image` con un prompt corto
+tipo "círculo azul simple, sin texto") para confirmar que responde de verdad.
+Si funciona, confirmar al usuario y descartar esa imagen de prueba. Si falla:
+
+> "Diste la key, pero todavía no está respondiendo. Puede ser que necesite un
+> momento para activarse, o que se copió algo de más o de menos. Espero unos
+> segundos y vuelvo a probar — si sigue sin funcionar, revisa que la copiaste
+> completa, sin espacios extra."
+
+Esperar y reintentar un par de veces antes de escalar. Nunca decir que el
+motor "no funciona" sin haber intentado esto primero.
+
+### Si falta Playwright (menos común — no necesita ninguna key)
+
+> "Playwright no está respondiendo. Esto normalmente se arregla reiniciando
+> Claude Code/Desktop por completo, o resincronizando el plugin
+> `ghl-skills-fanforce` desde el marketplace. ¿Puedes intentarlo y avisarme
+> cuando esté listo?"
+
+No hay nada que configurar aquí con una key — si falta, es un problema de
+instalación del plugin, no de credenciales, así que no hay auto-configuración
+posible.
+
+**Solo cuando todo esté confirmado conectado** (probado con una llamada real,
+no solo "dijo que sí"), pasar al PASO 1.
 
 ---
 
@@ -544,6 +602,10 @@ uno detrás de otro, cada uno con su encabezado de tipo y estilo.
 
 ## REGLAS
 
+- **PASO 0 siempre primero, en silencio si todo está bien.** Nunca pedir el
+  copy sin haber confirmado que Playwright y Nanobanana responden. Si falta
+  Nanobanana, guiar la configuración paso a paso (ver PASO 0) y probarla con
+  una imagen real antes de continuar — nunca solo asumir que ya quedó lista.
 - No requiere ningún cliente cargado de antemano — el copy, los colores de
   marca y el handle se piden directamente en el chat en el PASO 1.
 - Advertir si se repite el mismo estilo en varios carruseles.
