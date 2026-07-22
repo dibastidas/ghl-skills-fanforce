@@ -13,7 +13,7 @@
       },
       "displayName": "GHL Skills — Fanforce",
       "description": "Skills para publicar videos en redes sociales y crear automatizaciones de respuesta a comentarios directamente desde GoHighLevel, más diseño y copy de carruseles con Nanobanana y Playwright. Incluye verificación de canales conectados, programación de posts, workflows de comentarios para Instagram y Facebook, y generación de carruseles listos para publicar.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "category": "content-creation",
       "keywords": ["ghl", "gohighlevel", "social media", "automatizacion", "instagram", "facebook", "carrusel", "nanobanana", "playwright"]
     }
